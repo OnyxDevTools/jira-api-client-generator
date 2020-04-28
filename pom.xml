@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <groupId>com.intuit.devgru</groupId>
+    <version>1.0.0</version>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>jira-api-client-generator</artifactId>
+    <packaging>jar</packaging>
+    <name>jira-api-client-generator</name>
+
+    <build>
+        <plugins>
+            <!-- needed to compile java 1.8 source code features -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>dev.onyx.codegen</groupId>
+                <artifactId>client-api-codegen</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate-sources</goal>
+                        </goals>
+                        <configuration>
+                            <generateClient>true</generateClient>
+                            <clientOutputDirectory>${project.basedir}/../devgru/jira-client-api</clientOutputDirectory>
+                            <clientGroupId>com.intuit.devgru</clientGroupId>
+                            <clientVersion>1.0.0</clientVersion>
+                            <spec>${project.basedir}/src/main/resources/swagger.json</spec>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>

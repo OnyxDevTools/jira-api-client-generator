@@ -1,0 +1,224 @@
+openapi: 3.0.1
+info:
+  title: Spring Boot Reference Service
+  description: Simple REST service illustrating Intuit's best practices and patterns
+  termsOfService: https://github.intuit.com/<orgName>/DemoApplication
+  contact:
+    name: JSK - Intuit Services Platform Team
+    url: https://github.intuit.com/<orgName>
+    email: CTO-DevISPTeam@intuit.com
+  license:
+    name: Intuit Source Code License
+    url: https://insight.intuit.com/WorkResources/LegalAndPolicies/IntellectualProperty/3rdPartyCode/Pages/3rdPartyCode.aspx
+  version: "1.0"
+servers:
+- url: //localhost:8443/
+tags:
+- name: document-controller
+  description: Document Controller
+paths:
+  /v1/documents:
+    get:
+      tags:
+      - document-controller
+      summary: Get all the documents
+      description: Get all the documents
+      operationId: getDocumentsUsingGET
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Documents'
+        "500":
+          description: Unexpected error handling request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleErrorResponseBody'
+      deprecated: false
+      security:
+      - privateAuthUser: []
+    post:
+      tags:
+      - document-controller
+      summary: Create a new document that has content
+      description: Provides mechanism to create a document record. DocumentId is dynamically
+        generated for the passed-in content. The creation and last modified dates
+        are set to the date when the document gets created. The userName is set to
+        the logged in user name from iamPrincipal.
+      operationId: createDocumentUsingPOST
+      parameters:
+      - name: name
+        in: query
+        schema:
+          type: string
+      requestBody:
+        description: Document object that contains a content field
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Document'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        "400":
+          description: Bad request
+          content: {}
+        "500":
+          description: Unexpected error handling request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleErrorResponseBody'
+      deprecated: false
+      security:
+      - privateAuthUser: []
+      x-codegen-request-body-name: document
+  /v1/documents/{documentId}:
+    get:
+      tags:
+      - document-controller
+      summary: Get a document by document ID
+      operationId: getDocumentUsingGET
+      parameters:
+      - name: documentId
+        in: path
+        description: The document ID that was returned in the document object from
+          the POST command
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        "404":
+          description: Not found
+          content: {}
+        "500":
+          description: Unexpected error handling request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleErrorResponseBody'
+      deprecated: false
+      security:
+      - privateAuthUser: []
+    put:
+      tags:
+      - document-controller
+      summary: Update a document's content based on the document ID
+      operationId: updateDocumentUsingPUT
+      parameters:
+      - name: documentId
+        in: path
+        description: The document ID that was returned in the document object from
+          the POST command
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Document object that contains a content field with updated content
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Document'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Not found
+          content: {}
+        "500":
+          description: Unexpected error handling request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleErrorResponseBody'
+      deprecated: false
+      security:
+      - privateAuthUser: []
+      x-codegen-request-body-name: document
+    delete:
+      tags:
+      - document-controller
+      summary: Delete a document by document ID
+      operationId: deleteDocumentUsingDELETE
+      parameters:
+      - name: documentId
+        in: path
+        description: The document ID that was returned in the document object from
+          the POST command
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No content (delete successful)
+          content: {}
+        "404":
+          description: Not found
+          content: {}
+        "500":
+          description: Unexpected error handling request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleErrorResponseBody'
+      deprecated: false
+      security:
+      - privateAuthUser: []
+components:
+  schemas:
+    Document:
+      title: Document
+      type: object
+      properties:
+        content:
+          type: string
+        newField:
+          type: string
+        createdDate:
+          type: string
+          format: date-time
+        id:
+          type: string
+        lastModifiedDate:
+          type: string
+          format: date-time
+        userName:
+          type: string
+    SimpleErrorResponseBody:
+      title: SimpleErrorResponseBody
+      type: object
+      properties:
+        message:
+          type: string
+        debugInfo:
+          type: string
+    Documents:
+      title: Documents
+      type: object
+      properties:
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/Document'
